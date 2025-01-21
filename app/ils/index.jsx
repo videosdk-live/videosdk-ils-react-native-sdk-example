@@ -35,8 +35,8 @@ export default function Meeting() {
           name,
           mode, // "SEND_AND_RECV" || "RECV_ONLY"
           notification: {
-            title: "Video SDK Meeting",
-            message: "Meeting is running.",
+            title: "Video SDK Live Stream",
+            message: "Live stream is running.",
           },
         }}
         token={token}

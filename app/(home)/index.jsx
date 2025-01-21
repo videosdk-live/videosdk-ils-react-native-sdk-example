@@ -24,7 +24,7 @@ export default function HomeScreen() {
         }}
       >
         <Button
-          text={"Create a meeting"}
+          text={"Create live stream"}
           onPress={() => {
             router.push({
               pathname: "/(home)/speaker",
