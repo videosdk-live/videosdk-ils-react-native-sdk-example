@@ -62,9 +62,11 @@
 
 ## 🛠 Prerequisites
 
-- React v16 or later
-- Node v10 or later
-- Valid Video SDK [Account](https://app.videosdk.live/)
+- Node.js: v10 or later
+- React Native: CLI setup
+- Android Studio/Xcode: For Android/iOS development
+- Valid [Video SDK Account](https://app.videosdk.live/signup)
+
 
 ## 🎥 Live Stream Mode Overview
 
@@ -132,10 +134,6 @@ Bingo, it's time to push the launch button.
 ```js
 npm run start
 ```
-
-### TODO:
-
-Exampe Video
 
 ## 🧠 Key Concepts
 
