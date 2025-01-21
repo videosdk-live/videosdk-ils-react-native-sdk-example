@@ -63,7 +63,7 @@
 ## 🛠 Prerequisites
 
 - Node.js: v10 or later
-- React Native: CLI setup
+- Expo setup
 - Android Studio/Xcode: For Android/iOS development
 - Valid [Video SDK Account](https://app.videosdk.live/signup)
 
@@ -132,7 +132,11 @@ npm install
 Bingo, it's time to push the launch button.
 
 ```js
-npm run start
+// For Android
+npm run android
+
+// For iOS
+npm run ios
 ```
 
 ## 🧠 Key Concepts
