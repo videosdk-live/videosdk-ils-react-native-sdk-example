@@ -139,6 +139,11 @@ npm run android
 npm run ios
 ```
 
+### Result of Example:
+
+https://github.com/user-attachments/assets/50836404-5484-4e0d-abe7-6c5c6633d3a7
+
+
 ## 🧠 Key Concepts
 
 Understand the core components of our SDK:
