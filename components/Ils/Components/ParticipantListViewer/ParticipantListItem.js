@@ -136,10 +136,14 @@ function ParticipantListItem({ participantId }) {
 
         {!isLocal && mode == "SEND_AND_RECV" ? (
           <TouchableOpacity
-            onPress={() => {
-              publish({
-                mode: "RECV_ONLY",
-              });
+            onPress={async () => {
+              try {
+                await publish("CHANGE_MODE", undefined, {
+                  mode: "RECV_ONLY",
+                });
+              } catch (err) {
+                console.error("publish CHANGE_MODE failed", err);
+              }
             }}
             style={{
               height: 36,
@@ -155,10 +159,14 @@ function ParticipantListItem({ participantId }) {
           </TouchableOpacity>
         ) : !isLocal && mode == "RECV_ONLY" ? (
           <TouchableOpacity
-            onPress={() => {
-              publish({
-                mode: "SEND_AND_RECV",
-              });
+            onPress={async () => {
+              try {
+                await publish("CHANGE_MODE", undefined, {
+                  mode: "SEND_AND_RECV",
+                });
+              } catch (err) {
+                console.error("publish CHANGE_MODE failed", err);
+              }
             }}
             style={{
               height: 36,

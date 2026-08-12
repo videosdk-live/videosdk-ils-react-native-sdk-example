@@ -1,7 +1,6 @@
 import { RTCView, mediaDevices } from "@videosdk.live/react-native-sdk";
 import React, { useState } from "react";
 import {
-  SafeAreaView,
   View,
   Text,
   TouchableOpacity,
@@ -11,6 +10,7 @@ import {
   Keyboard,
   Clipboard,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Copy, MicOff, MicOn, VideoOff, VideoOn } from "../../../assets/icons";
 import TextInputContainer from "../../../components/TextInputContainer";
 import Button from "../../../components/Button";
@@ -28,8 +28,6 @@ export default function Speaker_Home({ navigation, route }) {
   const [meetingId, setMeetingId] = useState("");
   const [token, setToken] = useState("");
   const localParams = useLocalSearchParams();
-
-  console.log("localParams params", localParams);
 
   const isCreator = localParams.isCreator === "true";
 
@@ -51,10 +49,8 @@ export default function Speaker_Home({ navigation, route }) {
         .then((stream) => {
           setTrack(stream);
         })
-        .catch((e) => {
-          console.log(e);
-        });
-    }, [])
+        .catch(() => {});
+    }, []),
   );
 
   const disposeVideoTrack = () => {
@@ -67,6 +63,7 @@ export default function Speaker_Home({ navigation, route }) {
   };
 
   const naviagateToSpeaker = () => {
+    if (!meetingId || !token) return;
     disposeVideoTrack();
     router.push({
       pathname: "/ils",

@@ -1,37 +1,41 @@
-import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
-import colors from '../../../constants/Colors';
-import {convertRFValue} from '../../../constants/spacing';
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import colors from "../../../constants/Colors";
+import { convertRFValue } from "../../../constants/spacing";
 
-export default function MenuItem({title, description, icon, onPress}) {
+export default function MenuItem({ title, description, icon, onPress }) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View
         style={{
-          flexDirection: 'row',
+          flexDirection: "row",
           paddingHorizontal: 18,
           paddingVertical: 16,
-          alignItems: 'center',
-        }}>
+          alignItems: "center",
+        }}
+      >
         {icon && (
           <View
             style={{
               marginRight: 14,
-            }}>
+            }}
+          >
             {icon}
           </View>
         )}
 
         <View
           style={{
-            flexDirection: 'column',
-          }}>
+            flexDirection: "column",
+          }}
+        >
           <Text
             style={{
               // fontFamily: ROBOTO_FONTS.RobotoMedium,
               color: colors.primary[100],
               fontSize: convertRFValue(12),
-            }}>
+            }}
+          >
             {title}
           </Text>
 
@@ -41,7 +45,8 @@ export default function MenuItem({title, description, icon, onPress}) {
                 // fontFamily: ROBOTO_FONTS.Roboto,
                 color: colors.primary[400],
                 fontSize: convertRFValue(12),
-              }}>
+              }}
+            >
               {description}
             </Text>
           )}

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {
-  SafeAreaView,
   View,
   Platform,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import TextInputContainer from "../../../components/TextInputContainer";
 import Button from "../../../components/Button";
 import colors from "../../../constants/Colors";

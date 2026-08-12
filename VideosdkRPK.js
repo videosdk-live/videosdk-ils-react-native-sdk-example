@@ -1,11 +1,18 @@
-// import {NativeModules, NativeEventEmitter, Platform} from 'react-native';
+import { NativeModules, NativeEventEmitter, Platform } from "react-native";
 
-// class VideosdkRPK extends NativeEventEmitter {
-//   constructor(nativeModule) {
-//     super(nativeModule);
-//     this.startBroadcast =
-//       Platform.OS === 'ios' ? nativeModule.startBroadcast : null;
-//   }
-// }
+const { VideosdkRPK } = NativeModules;
 
-// export default new VideosdkRPK(NativeModules.VideosdkRPK);
+const emitter =
+  Platform.OS === "ios" && VideosdkRPK
+    ? new NativeEventEmitter(VideosdkRPK)
+    : null;
+
+const VideosdkBridge = {
+  startBroadcast: () =>
+    Platform.OS === "ios" ? VideosdkRPK?.startBroadcast() : undefined,
+  addListener: (callback) =>
+    emitter ? emitter.addListener("onScreenShare", callback) : null,
+  removeListener: (subscription) => subscription?.remove?.(),
+};
+
+export default VideosdkBridge;

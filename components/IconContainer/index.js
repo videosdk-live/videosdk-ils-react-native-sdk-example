@@ -1,12 +1,12 @@
-import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
-import {DownArrow} from '../../assets/icons';
+import React from "react";
+import { TouchableOpacity, View } from "react-native";
+import { DownArrow } from "../../assets/icons";
 
 const buttonStyle = {
   height: 50,
   aspectRatio: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
+  justifyContent: "center",
+  alignItems: "center",
 };
 const IconContainer = ({
   backgroundColor,
@@ -19,18 +19,20 @@ const IconContainer = ({
   return isDropDown ? (
     <View
       style={{
-        flexDirection: 'row',
+        flexDirection: "row",
         borderRadius: 14,
         borderWidth: 1.5,
-        borderColor: '#2B3034',
+        borderColor: "#2B3034",
         backgroundColor: backgroundColor,
         ...style,
-      }}>
+      }}
+    >
       <TouchableOpacity
         onPress={onPress}
         style={{
           ...buttonStyle,
-        }}>
+        }}
+      >
         <Icon width={26} height={26} />
       </TouchableOpacity>
       <TouchableOpacity
@@ -38,9 +40,10 @@ const IconContainer = ({
         style={{
           marginLeft: 0,
           marginRight: 10,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <DownArrow />
       </TouchableOpacity>
     </View>
@@ -48,11 +51,12 @@ const IconContainer = ({
     <TouchableOpacity
       onPress={onPress}
       style={{
-        backgroundColor: backgroundColor ? backgroundColor : 'transparent',
+        backgroundColor: backgroundColor ? backgroundColor : "transparent",
         ...buttonStyle,
         borderRadius: 14,
         ...style,
-      }}>
+      }}
+    >
       <Icon />
     </TouchableOpacity>
   );

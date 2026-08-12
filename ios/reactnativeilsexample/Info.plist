@@ -59,6 +59,16 @@
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
     </array>
+    <key>RTCAppGroupIdentifier</key>
+    <string>group.undefined.appgroup</string>
+    <key>RTCScreenSharingExtension</key>
+    <string>undefined.broadcast</string>
+    <key>RTCScreenSharingExtensionName</key>
+    <string>undefined.broadcast</string>
+    <key>UIBackgroundModes</key>
+    <array>
+      <string>voip</string>
+    </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>

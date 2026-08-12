@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -12,9 +6,10 @@ import {
   TouchableOpacity,
   Platform,
   Dimensions,
-  Alert,
 } from "react-native";
-import { useMeeting, usePubSub } from "@videosdk.live/react-native-sdk";
+import { useMeeting } from "@videosdk.live/react-native-sdk";
+import RaiseHandListener from "../PubSub/RaiseHandListener";
+import ChangeModeListener from "../PubSub/ChangeModeListener";
 import {
   CallEnd,
   Chat,
@@ -35,37 +30,26 @@ import Menu from "../../../components/Menu";
 import MenuItem from "../Components/MenuItem";
 import BottomSheet from "../../../components/BottomSheet";
 import ParticipantListViewer from "../Components/ParticipantListViewer";
-import ParticipantView from "./ParticipantView";
 import RemoteParticipantPresenter from "./RemoteParticipantPresenter";
-// import VideosdkRPK from "../../../VideosdkRPK";
+import VideosdkRPK from "../../../VideosdkRPK";
 import Toast from "react-native-simple-toast";
-
-const MemoizedParticipant = React.memo(
-  ParticipantView,
-  ({ participantId }, { participantId: oldParticipantId }) =>
-    participantId === oldParticipantId
-);
 import { MemoizedParticipantGrid } from "./ParticipantGrid";
 import { useOrientation } from "../../../utils/useOrientation";
 import ChatViewer from "../Components/ChatViewer";
 import { convertRFValue } from "../../../constants/spacing";
 
-export default function MeetingViewer() {
+export default function MeetingViewer({ onRequestLeave, onRequestEnd }) {
   const {
     localParticipant,
     participants,
-    pinnedParticipants,
     localWebcamOn,
     localMicOn,
-    leave,
-    end,
     toggleWebcam,
     toggleMic,
     presenterId,
     localScreenShareOn,
     toggleScreenShare,
     meetingId,
-    activeSpeakerId,
     changeMode,
     enableScreenShare,
     disableScreenShare,
@@ -84,90 +68,43 @@ export default function MeetingViewer() {
   const [bottomSheetView, setBottomSheetView] = useState("");
 
   useEffect(() => {
-    console.log("participants 12", participants.keys());
-  }, [participants]);
+    if (Platform.OS !== "ios") return;
+    const subscription = VideosdkRPK.addListener(async (event) => {
+      try {
+        if (event === "START_BROADCAST") {
+          await enableScreenShare();
+        } else if (event === "STOP_BROADCAST") {
+          await disableScreenShare();
+        }
+      } catch (err) {
+        console.error("iOS screen share toggle failed", err);
+      }
+    });
 
-  // const participantIds = useMemo(() => {
-  //   const participantMap = new Map(participants);
+    return () => {
+      VideosdkRPK.removeListener(subscription);
+    };
+  }, [enableScreenShare, disableScreenShare]);
 
-  //   const IDS = new Set();
-
-  //   for (const [key, value] of participantMap.entries()) {
-  //     if (value.mode === "SEND_AND_RECV") {
-  //       IDS.add(key);
-  //     }
-  //   }
-  //   const ids = participantMap.entries().reduce((acc, [key, value]) => {
-  //     if (value.mode === "SEND_AND_RECV") {
-  //       acc.add(key);
-  //     }
-  //     return acc;
-  //   }, new Set());
-
-  //   const IDSArray = Array.from(ids);
-  //   return IDSArray;
-  // }, [participants, activeSpeakerId, presenterId]);
-
-  usePubSub("RAISE_HAND", {
-    onMessageReceived: (data) => {
-      const { senderName } = data;
-      Toast.show(`${senderName} raised hand 🖐🏼`);
-    },
-  });
-
-  // useEffect(() => {
-  //   if (Platform.OS == "ios") {
-  //     VideosdkRPK.addListener("onScreenShare", (event) => {
-  //       if (event === "START_BROADCAST") {
-  //         enableScreenShare();
-  //       } else if (event === "STOP_BROADCAST") {
-  //         disableScreenShare();
-  //       }
-  //     });
-
-  //     return () => {
-  //       VideosdkRPK.removeAllListeners("onScreenShare");
-  //     };
-  //   }
-  // }, []);
-
-  const _handleILS = () => {
-    if (localParticipant.mode === "SEND_AND_RECV") {
-      changeMode("RECV_ONLY");
-    } else {
-      changeMode("SEND_AND_RECV");
+  const _handleILS = async () => {
+    try {
+      if (localParticipant.mode === "SEND_AND_RECV") {
+        await changeMode("RECV_ONLY");
+      } else {
+        await changeMode("SEND_AND_RECV");
+      }
+    } catch (err) {
+      console.error("changeMode failed", err);
     }
   };
 
-  usePubSub(`CHANGE_MODE_${localParticipant.id}`, {
-    onMessageReceived: (data) => {
-      const { message } = data;
-      if (message.mode === "RECV_ONLY") {
-        changeMode("RECV_ONLY");
-      } else if (message.mode === "SEND_AND_RECV") {
-        // changeMode("SEND_AND_RECV");
-        Alert.alert(
-          "Change Mode",
-          "Host has requested to become co-host. Do you want to accept?",
-          [
-            {
-              text: "Cancel",
-              onPress: () => console.log("Cancel Pressed"),
-              style: "cancel",
-            },
-            {
-              text: "OK",
-              onPress: () => changeMode("SEND_AND_RECV"),
-            },
-          ],
-          { cancelable: false }
-        );
-      }
-    },
-  });
-
   return (
     <>
+      <RaiseHandListener />
+      <ChangeModeListener
+        localParticipantId={localParticipant.id}
+        changeMode={changeMode}
+      />
       <View
         style={{
           flexDirection: "row",
@@ -189,7 +126,6 @@ export default function MeetingViewer() {
               }}
             >
               {meetingId ? meetingId : "xxx - xxx - xxx"}
-              {presenterId}
             </Text>
 
             <TouchableOpacity
@@ -268,7 +204,7 @@ export default function MeetingViewer() {
       <View
         style={{
           flex: 1,
-          flexDirection: orientation == "PORTRAIT" ? "column" : "row",
+          flexDirection: orientation === "PORTRAIT" ? "column" : "row",
           marginVertical: 12,
         }}
       >
@@ -285,7 +221,7 @@ export default function MeetingViewer() {
               }
               return acc;
             },
-            []
+            [],
           )}
           isPresenting={presenterId != null}
         />
@@ -300,7 +236,8 @@ export default function MeetingViewer() {
           description={"Only you will leave the call"}
           icon={<Leave width={22} height={22} />}
           onPress={() => {
-            leave();
+            leaveMenu.current?.close?.();
+            onRequestLeave?.();
           }}
         />
         <View
@@ -314,7 +251,8 @@ export default function MeetingViewer() {
           description={"End call for all participants"}
           icon={<EndForAll />}
           onPress={() => {
-            end();
+            leaveMenu.current?.close?.();
+            onRequestEnd?.();
           }}
         />
       </Menu>
@@ -340,8 +278,12 @@ export default function MeetingViewer() {
               borderColor: "#2B3034",
             }}
             backgroundColor={!localMicOn ? colors.primary[100] : "transparent"}
-            onPress={() => {
-              toggleMic();
+            onPress={async () => {
+              try {
+                await toggleMic();
+              } catch (err) {
+                console.error("toggleMic failed", err);
+              }
             }}
             Icon={() => {
               return localMicOn ? (
@@ -361,8 +303,12 @@ export default function MeetingViewer() {
             backgroundColor={
               !localWebcamOn ? colors.primary[100] : "transparent"
             }
-            onPress={() => {
-              toggleWebcam();
+            onPress={async () => {
+              try {
+                await toggleWebcam();
+              } catch (err) {
+                console.error("toggleWebcam failed", err);
+              }
             }}
             Icon={() => {
               return localWebcamOn ? (
@@ -392,11 +338,20 @@ export default function MeetingViewer() {
               borderWidth: 1.5,
               borderColor: "#2B3034",
             }}
-            onPress={() => {
-              if (presenterId == null || localScreenShareOn) {
-                // Platform.OS === "android"
-                toggleScreenShare();
-                // : VideosdkRPK.startBroadcast();
+            onPress={async () => {
+              if (presenterId != null && !localScreenShareOn) return;
+              try {
+                if (Platform.OS === "ios") {
+                  if (localScreenShareOn) {
+                    await toggleScreenShare();
+                  } else {
+                    VideosdkRPK.startBroadcast();
+                  }
+                } else {
+                  await toggleScreenShare();
+                }
+              } catch (err) {
+                console.error("toggleScreenShare failed", err);
               }
             }}
             Icon={() => {

@@ -1,11 +1,11 @@
-import {useLayoutEffect, useState} from 'react';
-import {Dimensions} from 'react-native';
+import { useLayoutEffect, useState } from "react";
+import { Dimensions } from "react-native";
 
 /**
  * Returns true if the screen is in portrait mode
  */
 const isPortrait = () => {
-  const dim = Dimensions.get('screen');
+  const dim = Dimensions.get("screen");
   return dim.height >= dim.width;
 };
 
@@ -16,14 +16,14 @@ const isPortrait = () => {
 export function useOrientation() {
   // State to hold the connection status
   const [orientation, setOrientation] = useState(
-    isPortrait() ? 'PORTRAIT' : 'LANDSCAPE',
+    isPortrait() ? "PORTRAIT" : "LANDSCAPE",
   );
 
   useLayoutEffect(() => {
     const callback = () =>
-      setOrientation(isPortrait() ? 'PORTRAIT' : 'LANDSCAPE');
+      setOrientation(isPortrait() ? "PORTRAIT" : "LANDSCAPE");
 
-    const subscription = Dimensions.addEventListener('change', callback);
+    const subscription = Dimensions.addEventListener("change", callback);
 
     return () => {
       subscription.remove();

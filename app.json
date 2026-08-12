@@ -7,11 +7,12 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "bitcode": false,
-      "bundleIdentifier": "com.anonymous.reactnativeilsexample"
+      "bundleIdentifier": "com.anonymous.reactnativeilsexample",
+      "appleTeamId": "8GZ776NSU2"
     },
     "android": {
       "adaptiveIcon": {
@@ -20,6 +21,9 @@
       },
       "permissions": [
         "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION",
+        "android.permission.FOREGROUND_SERVICE_CAMERA",
+        "android.permission.FOREGROUND_SERVICE_MICROPHONE",
         "android.permission.BLUETOOTH_CONNECT",
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.CAMERA",
@@ -40,6 +44,17 @@
     "plugins": [
       "expo-router",
       [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.9.24"
+          },
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
@@ -48,12 +63,18 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "@videosdk.live/expo-config-plugin",
       [
-        "@config-plugins/react-native-webrtc",
+        "@videosdk.live/expo-config-plugin",
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone"
+        }
+      ],
+      [
+        "@videosdk.live/expo-ios-screen-share",
+        {
+          "appleTeamId": "8GZ776NSU2",
+          "extensionName": "broadcast"
         }
       ]
     ],

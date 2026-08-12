@@ -1,25 +1,21 @@
 import React, { useRef, useState } from "react";
-import { View, Dimensions, ActivityIndicator, Text } from "react-native";
-import BottomSheet from "../../../components/BottomSheet";
+import { View, Text } from "react-native";
 import { useOrientation } from "../../../utils/useOrientation";
 import ParticipantView from "./ParticipantView";
-import PauseInvisibleParticipants from "./PauseInvisibleParticipant";
 
 const MemoizedParticipant = React.memo(
   ParticipantView,
   (
-    { participantId, quality, key, openStatsBottomSheet },
+    { participantId, quality, openStatsBottomSheet },
     {
       participantId: oldParticipantId,
       quality: oldQuality,
-      key: oldkey,
       openStatsBottomSheet: oldopenStatsBottomSheet,
-    }
+    },
   ) =>
     participantId === oldParticipantId &&
     quality === oldQuality &&
-    key === oldkey &&
-    openStatsBottomSheet === oldopenStatsBottomSheet
+    openStatsBottomSheet === oldopenStatsBottomSheet,
 );
 
 function ParticipantGrid({ participantIds, isPresenting }) {
@@ -81,8 +77,8 @@ export const MemoizedParticipantGrid = React.memo(
   ParticipantGrid,
   (
     { participantIds, isPresenting },
-    { participantIds: oldParticipantIds, isPresenting: oldIsPresenting }
+    { participantIds: oldParticipantIds, isPresenting: oldIsPresenting },
   ) =>
     JSON.stringify(participantIds) === JSON.stringify(oldParticipantIds) &&
-    isPresenting === oldIsPresenting
+    isPresenting === oldIsPresenting,
 );
