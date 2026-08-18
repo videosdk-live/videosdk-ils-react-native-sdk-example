@@ -127,7 +127,19 @@ Install all the dependencies to run the project.
 npm install
 ```
 
-### 5. Run the sample app
+### 5. Configure iOS screen sharing (iOS only)
+
+The iOS broadcast extension requires a registered App Group and your Apple Team ID. Both are placeholders in this repo and must be replaced with values from your own Apple Developer account before iOS screen sharing will work.
+
+1. In [Apple Developer → Identifiers](https://developer.apple.com/account/resources/identifiers/list/applicationGroup), create an App Group (e.g. `group.<your-bundle-id>.appgroup`) and note your Team ID.
+2. Replace `group.undefined.appgroup` with your App Group ID in all four files:
+   - `ios/broadcast/broadcast.entitlements`
+   - `ios/reactnativeilsexample/reactnativeilsexample.entitlements`
+   - `ios/reactnativeilsexample/Info.plist`
+   - `ios/broadcast/SampleHandler.swift`
+3. Replace `appleTeamId` in `app.json` (the `@videosdk.live/expo-ios-screen-share` plugin block) with your own Team ID.
+
+### 6. Run the sample app
 
 Bingo, it's time to push the launch button.
 
