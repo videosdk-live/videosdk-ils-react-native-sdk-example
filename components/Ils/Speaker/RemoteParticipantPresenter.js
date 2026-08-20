@@ -1,19 +1,19 @@
-import React from 'react';
-import {View, Text} from 'react-native';
+import React from "react";
+import { View, Text } from "react-native";
 import {
   useParticipant,
   RTCView,
   MediaStream,
-} from '@videosdk.live/react-native-sdk';
-import colors from '../../../constants/Colors';
-import {convertRFValue} from '../../../constants/spacing';
-import {ScreenShare} from '../../../assets/icons';
+} from "@videosdk.live/react-native-sdk";
+import colors from "../../../constants/Colors";
+import { convertRFValue } from "../../../constants/spacing";
+import { ScreenShare } from "../../../assets/icons";
 
-export default function RemoteParticipantPresenter({presenterId}) {
-  const {displayName, screenShareStream, screenShareOn} =
+export default function RemoteParticipantPresenter({ presenterId }) {
+  const { displayName, screenShareStream, screenShareOn } =
     useParticipant(presenterId);
 
-  const presentingText = displayName || '';
+  const presentingText = displayName || "";
 
   return (
     <View
@@ -21,12 +21,13 @@ export default function RemoteParticipantPresenter({presenterId}) {
         flex: 3,
         paddingHorizontal: 12,
         borderTopColor: colors.primary[700],
-        justifyContent: 'space-between',
-      }}>
+        justifyContent: "space-between",
+      }}
+    >
       {screenShareOn && screenShareStream ? (
         <RTCView
           streamURL={new MediaStream([screenShareStream.track]).toURL()}
-          objectFit={'contain'}
+          objectFit={"contain"}
           style={{
             flex: 1,
           }}
@@ -34,30 +35,33 @@ export default function RemoteParticipantPresenter({presenterId}) {
       ) : null}
       <View
         style={{
-          flexDirection: 'row',
+          flexDirection: "row",
           marginBottom: 8,
-          justifyContent: 'space-between',
-          position: 'absolute',
+          justifyContent: "space-between",
+          position: "absolute",
           bottom: 0,
           right: 0,
           left: 10,
-        }}>
+        }}
+      >
         <View
           style={{
-            flexDirection: 'row',
+            flexDirection: "row",
             padding: 6,
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: "center",
+            alignItems: "center",
             borderRadius: 4,
-          }}>
-          <ScreenShare width={20} height={20} fill={'#FFF'} />
+          }}
+        >
+          <ScreenShare width={20} height={20} fill={"#FFF"} />
           <Text
             style={{
-              color: 'white',
+              color: "white",
               // fontFamily: ROBOTO_FONTS.RobotoRegular,
               fontSize: convertRFValue(12),
               marginLeft: 10,
-            }}>
+            }}
+          >
             {`${presentingText} is Presenting`}
           </Text>
         </View>

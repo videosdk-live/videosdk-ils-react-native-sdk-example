@@ -1,28 +1,28 @@
-import React, {useEffect} from 'react';
-import {View, Text} from 'react-native';
+import React from "react";
+import { View, Text } from "react-native";
 import {
   useParticipant,
   RTCView,
   MediaStream,
-} from '@videosdk.live/react-native-sdk';
-import {convertRFValue} from '../../../constants/spacing';
-import colors from '../../../constants/Colors';
-import Avatar from '../../../components/Avatar';
-import {MicOff} from '../../../assets/icons';
+} from "@videosdk.live/react-native-sdk";
+import { convertRFValue } from "../../../constants/spacing";
+import colors from "../../../constants/Colors";
+import Avatar from "../../../components/Avatar";
+import { MicOff } from "../../../assets/icons";
 
 const commonStyle = {
-  alignItems: 'center',
-  position: 'absolute',
+  alignItems: "center",
+  position: "absolute",
   top: 10,
   padding: 8,
   height: 26,
   aspectRatio: 1,
   backgroundColor: colors.primary[700],
   borderRadius: 12,
-  justifyContent: 'center',
+  justifyContent: "center",
 };
 
-export default function ParticipantView({participantId, quality}) {
+export default function ParticipantView({ participantId, quality }) {
   const {
     displayName,
     webcamStream,
@@ -31,13 +31,16 @@ export default function ParticipantView({participantId, quality}) {
     isLocal,
     setQuality,
     isActiveSpeaker,
-  } = useParticipant(participantId, {});
-
-  useEffect(() => {
-    if (quality) {
-      setQuality(quality);
-    }
-  }, [quality]);
+  } = useParticipant(participantId, {
+    onStreamEnabled: async (stream) => {
+      if (isLocal || stream?.kind !== "video" || !quality) return;
+      try {
+        await setQuality(quality);
+      } catch (err) {
+        console.error("setQuality failed", err);
+      }
+    },
+  });
 
   const MicStatusComponent = () => {
     return (
@@ -45,8 +48,9 @@ export default function ParticipantView({participantId, quality}) {
         style={{
           ...commonStyle,
           right: 10,
-        }}>
-        <MicOff width={16} height={16} fill={'#fff'} />
+        }}
+      >
+        <MicOff width={16} height={16} fill={"#fff"} />
       </View>
     );
   };
@@ -55,22 +59,24 @@ export default function ParticipantView({participantId, quality}) {
     return (
       <View
         style={{
-          alignItems: 'center',
-          position: 'absolute',
+          alignItems: "center",
+          position: "absolute",
           bottom: 8,
           padding: 8,
           left: 6,
-          backgroundColor: 'rgba(0,0,0,0.3)',
-          flexDirection: 'row',
+          backgroundColor: "rgba(0,0,0,0.3)",
+          flexDirection: "row",
           borderRadius: 5,
-        }}>
+        }}
+      >
         <Text
           numberOfLines={1}
           style={{
-            color: '#fff',
+            color: "#fff",
             fontSize: convertRFValue(10),
-          }}>
-          {isLocal ? 'You' : displayName || ''}
+          }}
+        >
+          {isLocal ? "You" : displayName || ""}
         </Text>
       </View>
     );
@@ -83,12 +89,13 @@ export default function ParticipantView({participantId, quality}) {
         flex: 1,
         marginHorizontal: 3,
         marginVertical: 3,
-      }}>
+      }}
+    >
       {webcamOn && webcamStream ? (
         <>
           <RTCView
             streamURL={new MediaStream([webcamStream.track]).toURL()}
-            objectFit={'cover'}
+            objectFit={"cover"}
             mirror={isLocal ? true : false}
             style={{
               flex: 1,
@@ -99,12 +106,13 @@ export default function ParticipantView({participantId, quality}) {
           {micOn && isActiveSpeaker ? (
             <View
               style={{
-                backgroundColor: '#00000066',
-                position: 'absolute',
+                backgroundColor: "#00000066",
+                position: "absolute",
                 top: 10,
                 right: 10,
                 borderRadius: 16,
-              }}></View>
+              }}
+            ></View>
           ) : !micOn ? (
             <MicStatusComponent />
           ) : null}
@@ -128,13 +136,13 @@ export default function ParticipantView({participantId, quality}) {
       )}
       <View
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           right: 0,
           left: 0,
           bottom: 0,
           borderWidth: isActiveSpeaker ? 2 : 0,
-          borderColor: '#5568FE',
+          borderColor: "#5568FE",
           borderRadius: 8,
         }}
       />

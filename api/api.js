@@ -11,10 +11,12 @@ export const createMeeting = async ({ token }) => {
     headers: { Authorization: token, "Content-Type": "application/json" },
   };
 
-  const { roomId } = await fetch(url, options)
-    .then((response) => response.json())
-    .catch((error) => console.error("error", error));
-
-  console.log("room", roomId);
-  return roomId;
+  try {
+    const response = await fetch(url, options);
+    const body = await response.json();
+    if (!response.ok) return undefined;
+    return body.roomId;
+  } catch {
+    return undefined;
+  }
 };

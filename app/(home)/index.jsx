@@ -1,4 +1,5 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import React from "react";
 import Colors from "../../constants/Colors";
 import Button from "../../components/Button";

@@ -5,6 +5,9 @@
   <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
   <uses-permission android:name="android.permission.CAMERA"/>
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"/>
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -24,11 +27,11 @@
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS" android:value="0"/>
-    <meta-data android:name="live.videosdk.rnfgservice.notification_channel_description" android:value="Whenever meeting started notification will appear."/>
-    <meta-data android:name="live.videosdk.rnfgservice.notification_channel_name" android:value="Meeting Notification"/>
-    <meta-data android:name="live.videosdk.rnfgservice.notification_color" android:resource="@color/orange"/>
-    <service android:name="live.videosdk.rnfgservice.ForegroundService" android:foregroundServiceType="mediaProjection"/>
-    <service android:name="live.videosdk.rnfgservice.ForegroundServiceTask"/>
+    <meta-data android:name="live.videosdk.rnwebrtc.notification_channel_description" android:value="Whenever meeting started notification will appear."/>
+    <meta-data android:name="live.videosdk.rnwebrtc.notification_channel_name" android:value="Meeting Notification"/>
+    <meta-data android:name="live.videosdk.rnwebrtc.notification_color" android:resource="@color/orange"/>
+    <service android:name="live.videosdk.rnwebrtc.MediaProjectionService" android:foregroundServiceType="mediaProjection"/>
+    <service android:name="live.videosdk.rnwebrtc.MediaProjectionServiceTask"/>
     <activity android:name=".MainActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|uiMode" android:launchMode="singleTask" android:windowSoftInputMode="adjustResize" android:theme="@style/Theme.App.SplashScreen" android:exported="true" android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
