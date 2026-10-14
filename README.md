@@ -62,9 +62,9 @@
 
 ## 🛠 Prerequisites
 
-- Node.js: v10 or later
-- Expo setup
-- Android Studio/Xcode: For Android/iOS development
+- Node.js 22.11 or later
+- Expo SDK 57 (React Native 0.86) with a development build; Expo Go cannot load the VideoSDK native modules
+- Android Studio (an arm64 device on Android 7.0 or later) and Xcode 16 or later (iOS 18.0 or later)
 - Valid [Video SDK Account](https://app.videosdk.live/signup)
 
 
@@ -108,7 +108,7 @@ git clone https://github.com/videosdk-live/videosdk-ils-react-native-sdk-example
 Open your favorite code editor and copy `.env.example` to `.env` file.
 
 ```js
-cp .example.env .env;
+cp .env.example .env
 ```
 
 ### 3. Modify `.env` file
@@ -116,7 +116,7 @@ cp .example.env .env;
 Generate a temporary token from [Video SDK Account](https://app.videosdk.live/signup).
 
 ```js title=".env"
-REACT_APP_VIDEOSDK_TOKEN = "TEMPORARY-TOKEN";
+EXPO_PUBLIC_VIDEOSDK_TOKEN="TEMPORARY-TOKEN"
 ```
 
 ### 4. Install the dependencies

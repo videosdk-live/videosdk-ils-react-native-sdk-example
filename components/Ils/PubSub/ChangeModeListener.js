@@ -1,7 +1,12 @@
-import { usePubSub } from "@videosdk.live/react-native-sdk";
+import {
+  Constants,
+  useMediaDevice,
+  usePubSub,
+} from "@videosdk.live/react-native-sdk";
 import { Alert } from "react-native";
 
 export default function ChangeModeListener({ localParticipantId, changeMode }) {
+  const { requestPermission } = useMediaDevice();
   usePubSub(`CHANGE_MODE_${localParticipantId}`, {
     onMessageReceived: (data) => {
       const requestedMode = data?.payload?.mode;
@@ -23,6 +28,8 @@ export default function ChangeModeListener({ localParticipantId, changeMode }) {
               text: "OK",
               onPress: async () => {
                 try {
+                  // A co-host publishes camera and mic, so ask before switching mode
+                  await requestPermission(Constants.permission.AUDIO_AND_VIDEO);
                   await changeMode("SEND_AND_RECV");
                 } catch (err) {
                   console.error("changeMode failed", err);

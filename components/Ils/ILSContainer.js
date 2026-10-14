@@ -1,4 +1,4 @@
-import { useMeeting } from "@videosdk.live/react-native-sdk";
+import { useRoom } from "@videosdk.live/react-native-sdk";
 import { useEffect, useRef, useState } from "react";
 import MeetingViewer from "./Speaker/MeetingViewer";
 import WaitingToJoinView from "./Components/WaitingToJoinView";
@@ -24,7 +24,7 @@ export default function ILSContainer() {
   const [isJoined, setJoined] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
 
-  const mMeeting = useMeeting({});
+  const mMeeting = useRoom({});
 
   const mMeetingRef = useRef();
   const hasLeftRef = useRef(false);
@@ -33,7 +33,7 @@ export default function ILSContainer() {
     mMeetingRef.current = mMeeting;
   }, [mMeeting]);
 
-  const { join, leave, end } = useMeeting({
+  const { join, leave, end } = useRoom({
     onParticipantModeChanged: ({ mode, participantId }) => {
       const localParticipant = mMeetingRef.current?.localParticipant;
       if (participantId !== localParticipant?.id) return;
@@ -43,7 +43,7 @@ export default function ILSContainer() {
         safeUnpin(localParticipant);
       }
     },
-    onMeetingJoined: () => {
+    onRoomJoined: () => {
       const localParticipant = mMeetingRef.current?.localParticipant;
       if (localParticipant?.mode === "SEND_AND_RECV") {
         safePin(localParticipant);
@@ -52,7 +52,7 @@ export default function ILSContainer() {
         setJoined(true);
       }, 500);
     },
-    onMeetingLeft: () => {
+    onRoomLeft: () => {
       hasLeftRef.current = true;
       setJoined(false);
     },

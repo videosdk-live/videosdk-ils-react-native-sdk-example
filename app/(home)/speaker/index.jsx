@@ -1,4 +1,9 @@
-import { RTCView, mediaDevices } from "@videosdk.live/react-native-sdk";
+import {
+  Constants,
+  RTCView,
+  createCameraVideoTrack,
+  useMediaDevice,
+} from "@videosdk.live/react-native-sdk";
 import React, { useState } from "react";
 import {
   View,
@@ -15,10 +20,9 @@ import { Copy, MicOff, MicOn, VideoOff, VideoOn } from "../../../assets/icons";
 import TextInputContainer from "../../../components/TextInputContainer";
 import Button from "../../../components/Button";
 import colors from "../../../constants/Colors";
-import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-simple-toast";
 import { createMeeting, getToken } from "../../../api/api";
-import { router, Stack, useLocalSearchParams } from "expo-router";
+import { router, Stack, useFocusEffect, useLocalSearchParams } from "expo-router";
 
 export default function Speaker_Home({ navigation, route }) {
   const [tracks, setTrack] = useState("");
@@ -42,24 +46,24 @@ export default function Speaker_Home({ navigation, route }) {
     })();
   }, []);
 
+  const { requestPermission } = useMediaDevice();
+
   useFocusEffect(
     React.useCallback(() => {
-      mediaDevices
-        .getUserMedia({ audio: false, video: true })
-        .then((stream) => {
-          setTrack(stream);
-        })
-        .catch(() => {});
+      (async () => {
+        try {
+          // 2.0.0 does not prompt for camera and mic itself; ask before opening the preview
+          await requestPermission(Constants.permission.AUDIO_AND_VIDEO);
+          setTrack(await createCameraVideoTrack({ facingMode: "front" }));
+        } catch {}
+      })();
     }, []),
   );
 
+  // Frees the preview camera so the meeting can open it
   const disposeVideoTrack = () => {
-    setTrack((stream) => {
-      stream.getTracks().forEach((track) => {
-        track.enabled = false;
-        return track;
-      });
-    });
+    if (tracks) tracks.stop();
+    setTrack("");
   };
 
   const naviagateToSpeaker = () => {
@@ -123,7 +127,7 @@ export default function Speaker_Home({ navigation, route }) {
                   <RTCView
                     streamURL={tracks.toURL()}
                     objectFit={"cover"}
-                    mirror={true}
+                    setMirror={true}
                     style={{
                       flex: 1,
                       borderRadius: 20,

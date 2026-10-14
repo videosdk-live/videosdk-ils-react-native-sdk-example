@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import TextInputContainer from "./TextInput";
-import { useMeeting } from "@videosdk.live/react-native-sdk";
+import { useRoom } from "@videosdk.live/react-native-sdk";
 import Hyperlink from "react-native-hyperlink";
 import moment from "moment";
 import { usePubSub } from "@videosdk.live/react-native-sdk";
@@ -30,7 +30,7 @@ const ChatViewer = ({ raiseHandVisible }) => {
     mpubsubRef.current = mpubsub;
   }, [mpubsub]);
 
-  const mMeeting = useMeeting({});
+  const mMeeting = useRoom({});
   const localParticipantId = mMeeting?.localParticipant?.id;
 
   const [message, setMessage] = useState("");

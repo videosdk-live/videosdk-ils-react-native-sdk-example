@@ -9,8 +9,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "../../constants/Colors";
 import {
-  MeetingProvider,
-  MeetingConsumer,
+  RoomProvider,
+  RoomConsumer,
 } from "@videosdk.live/react-native-sdk";
 import ILSContainer from "../../components/Ils/ILSContainer";
 import { router, Stack, useLocalSearchParams } from "expo-router";
@@ -23,8 +23,8 @@ const requestPermissions = async () => {
       PermissionsAndroid.PERMISSIONS.CAMERA,
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
     ]);
-    // MeetingProvider only truly needs RECORD_AUDIO + CAMERA to unblock
-    // InCallManager.getDeviceInfo(). POST_NOTIFICATIONS is nice-to-have.
+    // The SDK does not ask for camera and mic itself, so the app asks before
+    // joining. POST_NOTIFICATIONS is nice-to-have.
     return (
       granted[PermissionsAndroid.PERMISSIONS.RECORD_AUDIO] ===
         PermissionsAndroid.RESULTS.GRANTED &&
@@ -72,9 +72,8 @@ export default function Meeting() {
     );
   }
 
-  // Wait for Android runtime permissions before mounting MeetingProvider.
-  // Without RECORD_AUDIO granted, InCallManager.getDeviceInfo() (called inside
-  // MeetingProvider) never resolves and the provider renders <> forever.
+  // Wait for Android runtime permissions before mounting RoomProvider: the
+  // SDK does not prompt, and the camera and mic stay off until access is granted.
   if (Platform.OS === "android" && !permissionsGranted) {
     return (
       <SafeAreaView
@@ -151,31 +150,27 @@ export default function Meeting() {
           headerShown: false,
         }}
       />
-      <MeetingProvider
+      <RoomProvider
         config={{
-          meetingId,
+          roomId: meetingId,
           micEnabled: micEnabled,
-          webcamEnabled: webcamEnabled,
-          name,
+          camEnabled: webcamEnabled,
+          participantName: name,
           mode, // "SEND_AND_RECV" || "RECV_ONLY"
-          notification: {
-            title: "Video SDK Live Stream",
-            message: "Live stream is running.",
-          },
           defaultCamera:"front"
         }}
         token={token}
       >
-        <MeetingConsumer
+        <RoomConsumer
           {...{
-            onMeetingLeft: () => {
+            onRoomLeft: () => {
               router.dismissAll();
             },
           }}
         >
           {() => <ILSContainer webcamEnabled={webcamEnabled} />}
-        </MeetingConsumer>
-      </MeetingProvider>
+        </RoomConsumer>
+      </RoomProvider>
     </SafeAreaView>
   );
 }

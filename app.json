@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "bitcode": false,
@@ -32,25 +31,28 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.WAKE_LOCK",
-        "android.permission.BLUETOOTH"
+        "android.permission.BLUETOOTH",
+        "android.permission.POST_NOTIFICATIONS"
       ],
       "package": "com.anonymous.reactnativeilsexample"
     },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
     "plugins": [
+      "./plugins/withoutVideosdkRPK",
+      [
+        "./plugins/withIosDeploymentTarget",
+        {
+          "deploymentTarget": "18.0"
+        }
+      ],
       "expo-router",
       [
         "expo-build-properties",
         {
           "android": {
-            "kotlinVersion": "1.9.24"
+            "minSdkVersion": 24
           },
           "ios": {
-            "deploymentTarget": "15.1"
+            "deploymentTarget": "18.0"
           }
         }
       ],
@@ -77,9 +79,6 @@
           "extensionName": "broadcast"
         }
       ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
+    ]
   }
 }
